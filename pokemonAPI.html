@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<title>You Can Do It</title>
+
+</head>
+<body>
+ 
+        <input pattern=".*\S+.*" type="text" id="pokemon" placeholder="Select Pokemon">
+        <button id="getAPI">Get PokeAPI</button>
+        <hr>
+        <input pattern=".*\S+.*" type="text" id="move" placeholder="Select Move">
+        <button id="attackBtn">More Info</button>
+
+        <div id='output'></div>
+        <div id='output2'></div>
+    <script>
+         document.getElementById('getAPI').addEventListener
+         ('click', getAPI);
+         document.getElementById('attackBtn').addEventListener
+         ('click', getAttack);
+      
+         function getAPI(){
+            var poke = document.getElementById('pokemon').value;
+                poke = poke.replace(/\s/g, ''); //whitespace check
+            var pokeA = poke.toLowerCase(); //now case senstive
+           const url = 'https://pokeapi.co/api/v2/pokemon/';
+            
+        
+            fetch(url + pokeA)
+            .then((res) => res.json())
+            .then((data) => {
+                let output = '<h2>Pokemon</h2>';
+               console.log(pokeA);
+               console.log(data);
+               
+                   output += `
+                   <ul>
+                        <li> Name: ${data.name} </li>
+                        <li> Height: ${data.height} </li>
+                        <li> Weight: ${data.weight} </li>
+                        <li> Type: ${data.types[0].type.name} </li>
+                        <li> Type 2: ${data.types[1].type.name} </li>
+                        <li> <img src="${data.sprites.front_default}"></li>
+
+                        <table>
+                            <tr>
+                                <th>Base Stat</th>
+                                <th>Effort</th>
+                                <th>Name</th>
+                            </tr>
+                            <tr>
+                               <td>${data.stats[0].base_stat}</td> 
+                               <td>${data.stats[0].effort}</td> 
+                               <td>${data.stats[0].stat.name}</td> 
+                            </tr>
+                            <tr>
+                                <td>${data.stats[1].base_stat}</td> 
+                               <td>${data.stats[1].effort}</td> 
+                               <td>${data.stats[1].stat.name}</td> 
+                            </tr>
+                            <tr>
+                                <td>${data.stats[2].base_stat}</td> 
+                               <td>${data.stats[2].effort}</td> 
+                               <td>${data.stats[2].stat.name}</td> 
+                            </tr>
+                            <tr>
+                                <td>${data.stats[3].base_stat}</td> 
+                               <td>${data.stats[3].effort}</td> 
+                               <td>${data.stats[3].stat.name}</td> 
+                            </tr>
+                            <tr>
+                                <td>${data.stats[4].base_stat}</td> 
+                               <td>${data.stats[4].effort}</td> 
+                               <td>${data.stats[4].stat.name}</td> 
+                            </tr>
+                            <tr>
+                                <td>${data.stats[5].base_stat}</td> 
+                               <td>${data.stats[5].effort}</td> 
+                               <td>${data.stats[5].stat.name}</td> 
+                            </tr>
+
+                        </table>
+
+                    </ul>
+                    `;
+              
+               document.getElementById('output').innerHTML = output;
+            })
+        }
+
+        function getAttack(){
+            var poke2 = document.getElementById('move').value;
+           const url2 = 'https://pokeapi.co/api/v2/move/'; 
+           poke2 = poke2.replace(/\s/g, ''); //whitespace check
+           var pokeB = poke2.toLowerCase(); //now case senstive
+
+
+           fetch(url2 + pokeB)
+            .then((res) => res.json())
+            .then((data) => {
+                let output2 = '<h2>Pokemon Attack</h2>';
+               console.log(pokeB);
+               console.log(data);
+               
+                   output2 += `
+                   <ul>
+                        <li> Name: ${data.name} </li>
+                        <li> Accuracy: ${data.accuracy} </li>
+                        <li> PP: ${data.pp} </li>
+                        <li> Type: ${data.type.name} </li>
+                        <li> Power: ${data.power} </li>
+                        <li> Flavor Text: ${data.flavor_text_entries[2].flavor_text}</li>
+
+                        
+
+                    </ul>
+                    `;
+              
+               document.getElementById('output2').innerHTML = output2;
+            })
+
+
+        }
+    </script>
+</body>
+</html>
