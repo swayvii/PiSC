@@ -1,0 +1,141 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<script>
+$(function(){
+    var notesList= [];
+    var selectedId = 0;
+
+    //Custom
+
+    //Event handlers
+    $("#btn_addNote").on("click", function(){
+        var note = new Object();
+        note.title= $("#tf_title").val();//grab value of title
+        note.content= $("#tf_content").val();//grab content value
+        note.tag= $("#tf_tag").val();
+        notesList.push(note);
+
+
+        localStorage.notesList = JSON.stringify (notesList); //use localStorage to keep list after refresh 
+    });
+
+    $("#btn_editNote").on("click", function(){
+        notesList[selectedId].title = $("#tf_title_edit").val();
+        notesList[selectedId].content = $("#tf_content_edit").val();
+        notesList[selectedId].tag = $("#tf_tag_edit").val();
+        localStorage.notesList = JSON.stringify (notesList);//update list
+    });
+
+    $("#btn_deleteNote").on("click", function(){
+        notesList.splice(selectedId,1); //removing the 1 item from selectedid
+        localStorage.notesList = JSON.stringify (notesList); 
+    })
+
+    $("#page_notes").on("pagebeforeshow", function(){
+        $ ("#list_notes").html("");
+
+        if(localStorage.notesList != undefined){
+        notesList = JSON.parse (localStorage.notesList);
+        }
+
+        for(i=0; i<notesList.length; i++){
+            $("#list_notes").append("<li id='"+ i + "'><a href='#page_viewNote'>" + notesList[i].title + "</a></li>");
+        }
+
+        $("#list_notes li").on("click", function(){ //to find slected note ID
+            selectedId=this.id;
+        });
+
+        $("#list_notes").listview("refresh");
+    });
+
+    $("#page_viewNote").on("pagebeforeshow", function(){
+        $(this).find(".ui_content h2").html(notesList[selectedId].title);
+        $(this).find(".ui_content #p_content").html(notesList[selectedId].content);
+        $(this).find(".ui_content #p_tag").html(notesList[selectedId].tag);
+    });
+
+    $("#page_editNote").on("pagebeforeshow",function(){
+        $(this).find("#tf_title_edit").val(notesList[selectedId].title);
+        $(this).find("#tf_content_edit").val(notesList[selectedId].content);
+        $(this).find("#tf_tag_edit").val(notesList[selectedId].tag);
+    });
+
+
+});
+
+</script>
+
+  <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+</head>
+
+<body>
+        <div id="page_notes" data-role="page">
+            <div data-role="header">
+                <h2>My Notes</h2>
+                <a href="#page_addNote" data-icon="plus" class="ui-btn-right" data-role="button">Add</a>
+            </div>
+            <div class="ui_content">
+                <ul id="list_notes" data-role="listview">
+                   
+                </ul>
+            </div>
+        </div>
+
+        <div id="page_viewNote" data-role="page">
+            <div data-role="header">
+                <a href="#page_notes" data-role="button" data-icon="carat-l">Back</a>
+                <h2>View Note</h2>
+                <a href="#page_editNote" data-role="button" data-icon="edit">Edit</a>
+            </div>
+            <div class="ui_content">
+                <h2>Test Note</h2>
+                <p id="p_content">Content</p>
+                <p id="p_tag"></p>
+            </div>
+        </div>
+        
+        <div id="page_addNote" data-role="page">
+            <div data-role="header">
+                <a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
+                <h2>Add Note</h2> 
+            </div>
+            <div class="ui_content">
+                <input type="text" id="tf_title" placeholder="Title">
+                <textarea id="tf_content" placeholder="Content"></textarea>
+                <input type="text" id="tf_tag" placeholder="Tag">
+                <a id="btn_addNote" href="#page_notes" data-role="button">Add Note</a>
+           
+            </div>
+        </div>
+
+        <div id="page_editNote" data-role="page">
+            <div data-role="header">
+                <a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
+                <h2>Edit Note</h2>
+                <a id="btn_deleteNote" href="#page_notes" data-role="button" data-icon="delete">Delete</a> 
+            </div>
+            <div class="ui_content">
+                <input type="text" id="tf_title_edit">
+                <textarea id="tf_content_edit"></textarea>
+                <input type="text" id="tf_tag_edit" >
+                <a id="btn_editNote" href="#page_viewNote" data-role="button">Edit Note</a>
+            </div>
+
+        </div>
+
+
+  </body>
+</html>
